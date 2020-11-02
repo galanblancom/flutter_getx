@@ -5,14 +5,14 @@ import '../models/transaction.dart';
 import '../models/transaction.dart';
 
 class TransactionController extends GetxController with Validators {
-  String _title = ''; //.obs.stream.transform(validarTitle);
-  String _amount = '';
-  DateTime _date;
-  List<Transaction> _transactions = [];
+  RxString _title = ''.obs; //.obs.stream.transform(validarTitle);
+  RxDouble _amount = 0.0.obs;
+  Rx<DateTime> _date = DateTime.now().obs;
+  RxList<Transaction> _transactions = List<Transaction>().obs;
 
-  String get title => _title;
-  String get amount => _amount;
-  DateTime get date => _date;
+  String get title => _title.value;
+  double get amount => _amount.value;
+  DateTime get date => _date.value;
   List<Transaction> get userTransactions => _transactions;
   List<Transaction> get recentTransactions =>
       _transactions.where((transaction) {
@@ -20,31 +20,25 @@ class TransactionController extends GetxController with Validators {
             .isAfter(DateTime.now().subtract(Duration(days: 7)));
       }).toList();
 
-  void changeTitle(String text) {
-    this._title = text;
-    update();
+  void changeTitle(String title) {
+    this._title.value = title;
   }
 
-  void changeAmount(String text) {
-    this._amount = text;
-    update();
+  void changeAmount(double amount) {
+    this._amount.value = amount;
   }
 
-  void changeDate(DateTime d) {
-    this._date = d;
-    update();
+  void changeDate(DateTime date) {
+    this._date.value = date;
   }
 
   void addTransaction(Transaction t) {
     this._transactions.add(t);
-    update();
   }
 
   void deleteTransaction(String id) {
     this._transactions.removeWhere((transaction) {
       return transaction.id == id;
     });
-    update();
   }
-  //increment() => count++;
 }

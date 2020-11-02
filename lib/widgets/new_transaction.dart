@@ -6,11 +6,8 @@ import 'package:intl/intl.dart';
 
 class NewTransaction extends StatelessWidget {
   void _submitData(TransactionController controller, BuildContext context) {
-    if (controller.amount.isEmpty) {
-      return;
-    }
     final enteredTitle = controller.title;
-    final enteredAmount = double.parse(controller.amount);
+    final enteredAmount = controller.amount;
 
     if (enteredTitle.isEmpty || enteredAmount <= 0 || controller.date == null) {
       return;
@@ -24,11 +21,8 @@ class NewTransaction extends StatelessWidget {
 
     controller.addTransaction(newTransaction);
 
-    //Navigator.of(context).pop();
     Get.back();
 
-    //bloc.changeTitle('');
-    //bloc.changeAmount('');
     controller.changeDate(null);
   }
 
@@ -45,41 +39,35 @@ class NewTransaction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Card(
-        elevation: 5,
-        child: Container(
-          padding: EdgeInsets.only(
-              top: 10,
-              left: 10,
-              right: 10,
-              bottom: MediaQuery.of(context).viewInsets.bottom + 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              GetBuilder<TransactionController>(
-                  init: TransactionController(),
-                  builder: (_) {
-                    return TextField(
+    return GetBuilder<TransactionController>(
+        init: TransactionController(),
+        builder: (_) {
+          return SingleChildScrollView(
+            child: Card(
+              elevation: 5,
+              child: Container(
+                padding: EdgeInsets.only(
+                    top: 10,
+                    left: 10,
+                    right: 10,
+                    bottom: MediaQuery.of(context).viewInsets.bottom + 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    TextField(
                       decoration: InputDecoration(labelText: 'Título'),
                       onChanged: _.changeTitle,
                       onSubmitted: (d) => _submitData(_, context),
-                    );
-                  }),
-              GetBuilder<TransactionController>(
-                  init: TransactionController(),
-                  builder: (_) {
-                    return TextField(
+                    ),
+                    TextField(
                       decoration: InputDecoration(labelText: 'Monto'),
-                      onChanged: _.changeAmount,
+                      onChanged: (v) {
+                        _.changeAmount(double.parse(v));
+                      },
                       keyboardType: TextInputType.number,
                       onSubmitted: (d) => _submitData(_, context),
-                    );
-                  }),
-              GetBuilder<TransactionController>(
-                  init: TransactionController(),
-                  builder: (_) {
-                    return Container(
+                    ),
+                    Container(
                       height: 70,
                       child: Row(
                         children: [
@@ -99,21 +87,17 @@ class NewTransaction extends StatelessWidget {
                           )
                         ],
                       ),
-                    );
-                  }),
-              GetBuilder<TransactionController>(
-                  init: TransactionController(),
-                  builder: (_) {
-                    return RaisedButton(
+                    ),
+                    RaisedButton(
                         child: Text('Agregar gasto'),
                         textColor: Theme.of(context).textTheme.button.color,
                         color: Theme.of(context).primaryColor,
-                        onPressed: () => _submitData(_, context));
-                  }),
-            ],
-          ),
-        ),
-      ),
-    );
+                        onPressed: () => _submitData(_, context)),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 }

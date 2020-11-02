@@ -28,45 +28,45 @@ class TransactionList extends StatelessWidget {
                           )),
                     ],
                   )
-                : ListView.builder(
-                    itemBuilder: (ctx, index) {
-                      return Card(
-                        elevation: 8,
-                        margin:
-                            EdgeInsets.symmetric(vertical: 8, horizontal: 15),
-                        child: ListTile(
-                            leading: CircleAvatar(
-                              radius: 30,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: FittedBox(
-                                  child: Text(
-                                      '\$${_.userTransactions[index].amount.toStringAsFixed(2)}'),
+                : Obx(() => ListView.builder(
+                      itemBuilder: (ctx, index) {
+                        return Card(
+                          elevation: 8,
+                          margin:
+                              EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                          child: ListTile(
+                              leading: CircleAvatar(
+                                radius: 30,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: FittedBox(
+                                    child: Text(
+                                        '\$${_.userTransactions[index].amount.toStringAsFixed(2)}'),
+                                  ),
                                 ),
                               ),
-                            ),
-                            title: Text(
-                              _.userTransactions[index].title,
-                              style: Theme.of(context).textTheme.title,
-                            ),
-                            subtitle: Text(
-                              DateFormat.yMMMd()
-                                  .format(_.userTransactions[index].date),
-                              style: TextStyle(
-                                color: Colors.grey,
+                              title: Text(
+                                _.userTransactions[index].title,
+                                style: Theme.of(context).textTheme.title,
                               ),
-                            ),
-                            trailing: IconButton(
-                                icon: Icon(Icons.delete),
-                                color: Theme.of(context).errorColor,
-                                onPressed: () {
-                                  _.deleteTransaction(
-                                      _.userTransactions[index].id);
-                                })),
-                      );
-                    },
-                    itemCount: _.userTransactions.length,
-                  ),
+                              subtitle: Text(
+                                DateFormat('dd/MM/yyyy hh:mm a')
+                                    .format(_.userTransactions[index].date),
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              trailing: IconButton(
+                                  icon: Icon(Icons.delete),
+                                  color: Theme.of(context).errorColor,
+                                  onPressed: () {
+                                    _.deleteTransaction(
+                                        _.userTransactions[index].id);
+                                  })),
+                        );
+                      },
+                      itemCount: _.userTransactions.length,
+                    )),
           );
         });
   }
